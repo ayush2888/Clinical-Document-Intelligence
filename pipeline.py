@@ -4,6 +4,7 @@ pipeline.py — wire Phase 1 through Phase 7 in one call.
 Used by the test script now and by Streamlit in Phase 8.
 """
 
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -35,7 +36,7 @@ class AnalysisResult:
 
 
 def analyze_document(file_path: str | Path) -> AnalysisResult:
-    """Run the full Phase 1–7 pipeline on one file."""
+    """Run the full Phase 1–7 pipeline on one file path."""
     document = ingest_document(file_path)
 
     extraction = extract_clinical_data(document)
@@ -54,3 +55,18 @@ def analyze_document(file_path: str | Path) -> AnalysisResult:
         assessments=assessments,
         summary=summary,
     )
+
+
+def analyze_uploaded_file(content: bytes, filename: str) -> AnalysisResult:
+    """Save an uploaded file temporarily, run the pipeline, then clean up."""
+    suffix = Path(filename).suffix or ".txt"
+    temp_path: Path | None = None
+
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            tmp.write(content)
+            temp_path = Path(tmp.name)
+        return analyze_document(temp_path)
+    finally:
+        if temp_path is not None:
+            temp_path.unlink(missing_ok=True)
