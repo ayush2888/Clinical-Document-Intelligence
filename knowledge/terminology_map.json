@@ -67,6 +67,48 @@
     "tiotropium": {
       "display_name": "Tiotropium",
       "aliases": ["tiotropium"]
+    },
+    "bipolar_disorder": {
+      "display_name": "Bipolar disorder",
+      "aliases": [
+        "bipolar disorder",
+        "bipolar",
+        "bipolar i disorder",
+        "bipolar ii disorder"
+      ]
+    },
+    "generalized_anxiety_disorder": {
+      "display_name": "Generalized anxiety disorder",
+      "aliases": [
+        "generalized anxiety disorder",
+        "anxiety disorder",
+        "anxiety",
+        "gad"
+      ]
+    },
+    "osteoarthritis": {
+      "display_name": "Osteoarthritis",
+      "aliases": [
+        "osteoarthritis",
+        "degenerative joint disease",
+        "oa"
+      ]
+    },
+    "trazodone": {
+      "display_name": "Trazodone",
+      "aliases": ["trazodone"]
+    },
+    "sertraline": {
+      "display_name": "Sertraline",
+      "aliases": ["sertraline", "zoloft"]
+    },
+    "clonazepam": {
+      "display_name": "Clonazepam",
+      "aliases": ["clonazepam", "klonopin"]
+    },
+    "lamotrigine": {
+      "display_name": "Lamotrigine",
+      "aliases": ["lamotrigine"]
     }
   }
 }

@@ -1,0 +1,61 @@
+PATIENT: VALDEZ, ADRIANA
+MRN: 489-11-602
+CLAIM #: AET-77209-B
+DOB: XX/XX/XXXX
+
+**EXHIBIT A: INTAKE & DEMOGRAPHICS**
+---------------------------------------------------------------------------------------------------
+DOCUMENT ID: 88102-A | PAGE 1 of 28
+VALDEZ, ADRIANA | MRN: 489-11-602
+
+**Harmony Behavioral & Counseling Services, LLC**
+**PATIENT INFORMATION SHEET**
+
+**DATE COMPLETED:** 11/19/2025
+
+**PATIENT NAME:** Valdez, Adriana
+**DATE OF BIRTH:** XX/XX/XXXX
+**ADDRESS:** [Address Redacted]
+**PHONE:** (985) 555-0182
+**EMAIL:** [Email Redacted]
+
+**EMERGENCY CONTACT:**
+  Name: Marcus Benoit (Fiancé)
+  Phone: (985) 555-0183
+
+**INSURANCE INFORMATION:**
+  Primary Carrier: Aetna Choice POS II
+  Policy Number: XXXXXXXXX
+  Group Number: 98754
+
+**REFERRING PROVIDER:** N/A - Self-referral
+
+---
+
+**PROBLEM LIST (as of Nov 2025)**
+*   Bipolar Disorder (F31.9) - Active
+*   Generalized Anxiety Disorder (F41.1) - Active
+*   History of Suicidal Ideation - History
+*   Sleep Disturbance (G47.00) - Active
+*   Ocular Irritation - Resolved
+
+---
+
+**MEDICATION RECONCILIATION**
+*DOCUMENTATION DATE: 11/19/2025*
+*REVIEWED BY: R. Whitfield-Barnes, LPC-S*
+
+**CURRENT MEDICATIONS:**
+1.  **Zoloft (sertraline)** - Dose unspecified, for mood stabilization.
+2.  **Trazodone** - Dose unspecified, for insomnia. Patient reports this is effective.
+3.  **2PFM** - Unspecified use.
+4.  **Klonopin (clonazepam)** - PRN (as needed) for acute anxiety/muscle tension.
+
+**PAST MEDICATIONS (Discontinued due to adverse effects):**
+*   Latuda
+*   Rexulti
+*   Vraylar
+
+---
+
+The patient, a 39-year-old female, presents for this initial evaluation to establish therapeutic care for long-standing challenges

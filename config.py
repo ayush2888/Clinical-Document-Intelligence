@@ -22,6 +22,7 @@ load_dotenv(BASE_DIR / ".env")
 DEMO_DIR = BASE_DIR / "data" / "demo"
 PATIENT_DEMO_DIR = DEMO_DIR / "patient_001"
 EVAL_DIR = BASE_DIR / "data" / "evaluation"
+SUPERINSIGHT_DIR = EVAL_DIR / "external"
 
 # --- Groq LLM (used starting Phase 2; safe to leave empty in Phase 0) ---
 # Groq uses an OpenAI-compatible API, so Phase 2 will use the `openai` Python

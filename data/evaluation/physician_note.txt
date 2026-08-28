@@ -1,0 +1,37 @@
+SYNTHETIC PATIENT NOTE — NOT REAL PHI
+=====================================
+
+Patient: Jane Doe (demo case)
+Age: 58 | Sex: Female
+Date: 2026-08-15
+
+Chief complaint: Increased thirst and fatigue for 3 weeks.
+
+History:
+- Type 2 diabetes mellitus (diagnosed 2019)
+- Hypertension
+- No known drug allergies
+
+Medications:
+- Metformin 500 mg twice daily
+- Lisinopril 10 mg once daily
+
+Vitals today:
+- Blood pressure: 148/92 mmHg
+- Heart rate: 78 bpm
+
+Recent labs (referenced from external lab report):
+- HbA1c: 9.2%
+- Fasting glucose: 186 mg/dL
+- Creatinine: 1.1 mg/dL (reference 0.6–1.2)
+
+Assessment:
+Poor glycemic control. Blood pressure above target.
+
+Plan:
+- Reinforce diet and exercise counseling
+- Consider endocrinology referral
+- Repeat HbA1c in 3 months
+- Clinician to review medication adjustment
+
+Signed: Dr. A. Smith, MD (synthetic)

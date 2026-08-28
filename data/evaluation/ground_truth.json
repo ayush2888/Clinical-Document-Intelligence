@@ -1,0 +1,79 @@
+{
+  "version": "1.1",
+  "description": "Synthetic ground truth for POC extraction evaluation. Includes local demo cases and Superinsight benchmark mappings. NOT real PHI. Metrics are computed live against Groq extraction output — never fabricated.",
+  "cases": [
+    {
+      "id": "eval_physician_note_jane_doe",
+      "document": "physician_note.txt",
+      "notes": "Plain-text baseline — no OCR noise. Primary internal evaluation document.",
+      "expected": {
+        "patient": {
+          "name": { "match": "contains", "value": "Jane Doe" },
+          "age": { "value": 58 },
+          "sex": { "match": "contains", "value": "Female" }
+        },
+        "diagnoses": [
+          { "canonical_name": "type_2_diabetes_mellitus" },
+          { "canonical_name": "hypertension" }
+        ],
+        "medications": [
+          { "canonical_name": "metformin", "dose_contains": "500" },
+          { "canonical_name": "lisinopril", "dose_contains": "10" }
+        ],
+        "laboratory_results": [
+          { "canonical_name": "hba1c", "value": "9.2" },
+          { "canonical_name": "fasting_glucose", "value": "186" },
+          { "canonical_name": "creatinine", "value": "1.1" }
+        ],
+        "vital_signs": [
+          { "canonical_name": "blood_pressure", "value_contains": "148/92" },
+          { "canonical_name": "heart_rate", "value": "78" }
+        ],
+        "symptoms": [
+          { "name_contains": "thirst" },
+          { "name_contains": "fatigue" }
+        ]
+      }
+    },
+    {
+      "id": "superinsight_golden_a_dde",
+      "document": "external/golden_a_eval.txt",
+      "notes": "Superinsight golden_a excerpt (DDE). Full source: golden_a_dde.txt. Apache 2.0.",
+      "expected": {
+        "patient": {
+          "name": { "match": "contains", "value": "Harrison" },
+          "age": { "value": 58 },
+          "sex": { "match": "contains", "value": "Male" }
+        },
+        "diagnoses": [
+          { "name_contains": "avascular" },
+          { "name_contains": "hypertension" }
+        ],
+        "vital_signs": [
+          { "canonical_name": "blood_pressure", "value_contains": "126/86" }
+        ]
+      }
+    },
+    {
+      "id": "superinsight_golden_b_clinical_note",
+      "document": "external/golden_b_eval.txt",
+      "notes": "Superinsight golden_b intake excerpt. Full source: golden_b_clinical_note.txt. Apache 2.0.",
+      "expected": {
+        "patient": {
+          "name": { "match": "contains", "value": "Valdez" },
+          "age": { "value": 39 },
+          "sex": { "match": "contains", "value": "Female" }
+        },
+        "diagnoses": [
+          { "canonical_name": "bipolar_disorder" },
+          { "canonical_name": "generalized_anxiety_disorder" },
+          { "name_contains": "sleep" }
+        ],
+        "medications": [
+          { "canonical_name": "trazodone" },
+          { "canonical_name": "sertraline" }
+        ]
+      }
+    }
+  ]
+}
