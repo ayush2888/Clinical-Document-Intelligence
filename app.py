@@ -11,7 +11,12 @@ import streamlit as st
 
 from extraction import extraction_to_dict
 from generation import POC_DISCLAIMER
-from pipeline import AnalysisResult, analyze_uploaded_file
+from pipeline import (
+    AnalysisResult,
+    PatientAnalysisResult,
+    analyze_uploaded_file,
+    analyze_uploaded_files,
+)
 
 SUPPORTED_TYPES = ["txt", "pdf", "png", "jpg", "jpeg"]
 
@@ -24,6 +29,10 @@ PIPELINE_STEPS = [
     "Rule-based assessment",
     "Patient summary generation",
 ]
+
+MULTI_PIPELINE_STEPS = PIPELINE_STEPS[:4] + [
+    "Multi-document merge",
+] + PIPELINE_STEPS[4:]
 
 st.set_page_config(
     page_title="Clinical Document Intelligence Hub",
@@ -226,59 +235,120 @@ def render_disclaimer() -> None:
     )
 
 
-def render_sidebar() -> tuple[object | None, bool]:
+def render_sidebar() -> tuple[str, object | None, list | None, str, bool]:
     with st.sidebar:
-        st.markdown('<div class="sidebar-title">Document input</div>', unsafe_allow_html=True)
-        uploaded = st.file_uploader(
-            "Upload clinical file",
-            type=SUPPORTED_TYPES,
+        st.markdown('<div class="sidebar-title">Analysis mode</div>', unsafe_allow_html=True)
+        mode = st.radio(
+            "Mode",
+            options=["Single document", "Multi-document (same patient)"],
             label_visibility="collapsed",
-            help="Supported: TXT, PDF, PNG, JPG",
         )
 
-        if uploaded:
-            st.success(f"**{uploaded.name}**")
-            st.caption(f"{uploaded.size:,} bytes")
+        patient_id = ""
+        uploaded = None
+        uploaded_many: list | None = None
+
+        st.markdown('<div class="sidebar-title">Document input</div>', unsafe_allow_html=True)
+
+        if mode == "Single document":
+            uploaded = st.file_uploader(
+                "Upload clinical file",
+                type=SUPPORTED_TYPES,
+                label_visibility="collapsed",
+                help="Supported: TXT, PDF, PNG, JPG",
+            )
+            if uploaded:
+                st.success(f"**{uploaded.name}**")
+                st.caption(f"{uploaded.size:,} bytes")
+        else:
+            patient_id = st.text_input(
+                "Patient ID",
+                value="patient_001",
+                help="Label for this patient case — used to prevent accidental cross-patient merges.",
+            )
+            uploaded_many = st.file_uploader(
+                "Upload clinical files (same patient)",
+                type=SUPPORTED_TYPES,
+                accept_multiple_files=True,
+                label_visibility="collapsed",
+                help="Select 2+ files belonging to the same patient.",
+            )
+            if uploaded_many:
+                st.success(f"**{len(uploaded_many)} file(s) selected**")
+                for item in uploaded_many:
+                    st.caption(f"• {item.name} ({item.size:,} bytes)")
 
         st.markdown("---")
+        steps = MULTI_PIPELINE_STEPS if mode.startswith("Multi") else PIPELINE_STEPS
         st.markdown('<div class="sidebar-title">Processing pipeline</div>', unsafe_allow_html=True)
-        for idx, step in enumerate(PIPELINE_STEPS, start=1):
+        for idx, step in enumerate(steps, start=1):
             st.markdown(f"{idx}. {step}")
 
         st.markdown("---")
         st.markdown('<div class="sidebar-title">Demo files</div>', unsafe_allow_html=True)
-        st.caption("Try: physician_note.txt, discharge_summary.pdf, lab_report.png")
+        if mode == "Single document":
+            st.caption("Try: physician_note.txt, discharge_summary.pdf, lab_report.png")
+        else:
+            st.caption("Try all 3 files from data/demo/patient_001/")
 
+        has_input = uploaded is not None if mode == "Single document" else bool(uploaded_many)
         analyze_clicked = st.button(
-            "Analyze Document",
+            "Analyze Document" if mode == "Single document" else "Analyze Patient Case",
             type="primary",
             use_container_width=True,
-            disabled=uploaded is None,
+            disabled=not has_input,
         )
 
-    return uploaded, analyze_clicked
+    return mode, uploaded, uploaded_many, patient_id, analyze_clicked
 
 
-def run_analysis(uploaded_file) -> AnalysisResult:
+def run_analysis_single(uploaded_file) -> AnalysisResult:
+    steps = PIPELINE_STEPS
     progress = st.progress(0, text="Starting analysis...")
-    for i in range(len(PIPELINE_STEPS)):
-        progress.progress((i + 1) / len(PIPELINE_STEPS), text=PIPELINE_STEPS[i])
+    for i in range(len(steps)):
+        progress.progress((i + 1) / len(steps), text=steps[i])
 
     result = analyze_uploaded_file(uploaded_file.getvalue(), uploaded_file.name)
     progress.progress(1.0, text="Analysis complete")
     return result
 
 
-def patient_metrics(result: AnalysisResult) -> None:
+def run_analysis_multi(uploaded_files, patient_id: str) -> PatientAnalysisResult:
+    steps = MULTI_PIPELINE_STEPS
+    progress = st.progress(0, text="Starting multi-document analysis...")
+    for i in range(len(steps)):
+        progress.progress((i + 1) / len(steps), text=steps[i])
+
+    uploads = [(item.getvalue(), item.name) for item in uploaded_files]
+    result = analyze_uploaded_files(uploads, patient_id=patient_id or None)
+    progress.progress(1.0, text="Patient case analysis complete")
+    return result
+
+
+def get_extraction(result: AnalysisResult | PatientAnalysisResult):
+    return result.extraction
+
+
+def get_documents(result: AnalysisResult | PatientAnalysisResult) -> list:
+    if isinstance(result, PatientAnalysisResult):
+        return result.documents
+    return [result.document]
+
+
+def patient_metrics(result: AnalysisResult | PatientAnalysisResult) -> None:
     patient = result.extraction.patient
+    docs = get_documents(result)
     cols = st.columns(4)
     cols[0].metric("Patient", patient.name if patient and patient.name else "—")
     cols[1].metric("Age", patient.age if patient and patient.age else "—")
     cols[2].metric("Risk flags", len(result.summary.risk_flags))
-    cols[3].metric("Lab results", len(result.extraction.laboratory_results))
+    cols[3].metric(
+        "Documents" if isinstance(result, PatientAnalysisResult) else "Lab results",
+        len(docs) if isinstance(result, PatientAnalysisResult) else len(result.extraction.laboratory_results),
+    )
 
 
-def render_summary_section(result: AnalysisResult) -> None:
+def render_summary_section(result: AnalysisResult | PatientAnalysisResult) -> None:
     summary = result.summary
 
     st.markdown("## Clinical summary")
@@ -331,7 +401,7 @@ def render_summary_section(result: AnalysisResult) -> None:
     )
 
 
-def render_assessment_section(result: AnalysisResult) -> None:
+def render_assessment_section(result: AnalysisResult | PatientAnalysisResult) -> None:
     st.markdown("## Workflow assessment")
     st.caption("Deterministic rules applied to validated extraction + knowledge context.")
 
@@ -345,15 +415,32 @@ def render_assessment_section(result: AnalysisResult) -> None:
         st.markdown("---")
 
 
-def render_details_tabs(result: AnalysisResult) -> None:
+def render_multi_document_banner(result: PatientAnalysisResult) -> None:
+    st.markdown("## Source documents")
+    st.caption(
+        f"Patient ID: **{result.patient_id or '—'}** · "
+        f"{len(result.source_filenames)} documents merged into one patient view."
+    )
+    for name in result.source_filenames:
+        st.markdown(f"- `{name}`")
+
+
+def render_details_tabs(result: AnalysisResult | PatientAnalysisResult) -> None:
     st.markdown("## Evidence & technical details")
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs(
         ["Extracted text", "Structured data", "Evidence", "Knowledge", "Summary JSON"]
     )
 
+    documents = get_documents(result)
+
     with tab1:
-        st.text_area("Original document text", result.document.text, height=320)
+        if len(documents) == 1:
+            st.text_area("Original document text", documents[0].text, height=320)
+        else:
+            for doc in documents:
+                with st.expander(f"{doc.filename} ({doc.source_type})"):
+                    st.text_area("Text", doc.text, height=220, label_visibility="collapsed")
 
     with tab2:
         st.json(extraction_to_dict(result.extraction))
@@ -362,13 +449,37 @@ def render_details_tabs(result: AnalysisResult) -> None:
         extraction = result.extraction
         rows = []
         for dx in extraction.diagnoses:
-            rows.append({"Type": "Diagnosis", "Name": dx.name, "Confidence": dx.confidence, "Evidence": dx.evidence})
+            rows.append({
+                "Type": "Diagnosis",
+                "Name": dx.name,
+                "Source": dx.source_document,
+                "Confidence": dx.confidence,
+                "Evidence": dx.evidence,
+            })
         for med in extraction.medications:
-            rows.append({"Type": "Medication", "Name": med.name, "Confidence": med.confidence, "Evidence": med.evidence})
+            rows.append({
+                "Type": "Medication",
+                "Name": med.name,
+                "Source": med.source_document,
+                "Confidence": med.confidence,
+                "Evidence": med.evidence,
+            })
         for lab in extraction.laboratory_results:
-            rows.append({"Type": "Lab", "Name": lab.test_name, "Confidence": lab.confidence, "Evidence": lab.evidence})
+            rows.append({
+                "Type": "Lab",
+                "Name": lab.test_name,
+                "Source": lab.source_document,
+                "Confidence": lab.confidence,
+                "Evidence": lab.evidence,
+            })
         for vital in extraction.vital_signs:
-            rows.append({"Type": "Vital", "Name": vital.name, "Confidence": vital.confidence, "Evidence": vital.evidence})
+            rows.append({
+                "Type": "Vital",
+                "Name": vital.name,
+                "Source": vital.source_document,
+                "Confidence": vital.confidence,
+                "Evidence": vital.evidence,
+            })
         st.dataframe(rows, use_container_width=True, hide_index=True)
 
     with tab4:
@@ -386,13 +497,23 @@ def render_details_tabs(result: AnalysisResult) -> None:
         st.json(json.loads(result.summary.model_dump_json()))
 
 
-def render_empty_state() -> None:
+def render_empty_state(mode: str) -> None:
+    if mode == "Single document":
+        message = (
+            "Upload a clinical document in the sidebar, then click "
+            "<strong>Analyze Document</strong>."
+        )
+    else:
+        message = (
+            "Upload 2+ documents for the same patient, enter a patient ID, "
+            "then click <strong>Analyze Patient Case</strong>."
+        )
     st.markdown(
-        """
+        f"""
         <div class="card" style="text-align:center; padding: 2.5rem 1rem;">
           <div class="card-title">Ready to analyze</div>
           <div class="card-body">
-            Upload a clinical document in the sidebar, then click <strong>Analyze Document</strong>.
+            {message}
           </div>
         </div>
         """,
@@ -405,20 +526,25 @@ def main() -> None:
     render_hero()
     render_disclaimer()
 
-    uploaded, analyze_clicked = render_sidebar()
+    mode, uploaded, uploaded_many, patient_id, analyze_clicked = render_sidebar()
 
-    if analyze_clicked and uploaded is not None:
+    if analyze_clicked:
         try:
             with st.spinner("Running clinical intelligence pipeline..."):
-                st.session_state["analysis_result"] = run_analysis(uploaded)
+                if mode == "Single document" and uploaded is not None:
+                    st.session_state["analysis_result"] = run_analysis_single(uploaded)
+                elif uploaded_many:
+                    st.session_state["analysis_result"] = run_analysis_multi(
+                        uploaded_many, patient_id
+                    )
         except Exception as exc:
             st.error(f"Analysis failed: {exc}")
             st.session_state.pop("analysis_result", None)
 
-    result: AnalysisResult | None = st.session_state.get("analysis_result")
+    result: AnalysisResult | PatientAnalysisResult | None = st.session_state.get("analysis_result")
 
     if result is None:
-        render_empty_state()
+        render_empty_state(mode)
         st.markdown(
             f'<div class="footer-note">{POC_DISCLAIMER}</div>',
             unsafe_allow_html=True,
@@ -427,6 +553,9 @@ def main() -> None:
 
     patient_metrics(result)
     st.markdown("")
+    if isinstance(result, PatientAnalysisResult):
+        render_multi_document_banner(result)
+        st.markdown("")
     render_summary_section(result)
     render_assessment_section(result)
     render_details_tabs(result)

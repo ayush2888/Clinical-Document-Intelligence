@@ -20,6 +20,7 @@ load_dotenv(BASE_DIR / ".env")
 
 # --- Paths (easy to reuse in other files) ---
 DEMO_DIR = BASE_DIR / "data" / "demo"
+PATIENT_DEMO_DIR = DEMO_DIR / "patient_001"
 EVAL_DIR = BASE_DIR / "data" / "evaluation"
 
 # --- Groq LLM (used starting Phase 2; safe to leave empty in Phase 0) ---

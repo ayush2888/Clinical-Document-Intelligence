@@ -20,6 +20,7 @@ class Diagnosis(BaseModel):
     display_name: str | None = None
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class Medication(BaseModel):
@@ -30,18 +31,21 @@ class Medication(BaseModel):
     frequency: str | None = None
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class Allergy(BaseModel):
     substance: str
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class Symptom(BaseModel):
     name: str
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class VitalSign(BaseModel):
@@ -52,6 +56,7 @@ class VitalSign(BaseModel):
     unit: str | None = None
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class LabResult(BaseModel):
@@ -63,18 +68,21 @@ class LabResult(BaseModel):
     reference_range_if_present: str | None = None
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class Procedure(BaseModel):
     name: str
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class ImportantFinding(BaseModel):
     finding: str
     evidence: str
     confidence: float | None = None
+    source_document: str | None = None
 
 
 class ClinicalExtraction(BaseModel):
