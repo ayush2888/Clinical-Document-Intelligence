@@ -1,5 +1,5 @@
 """
-test_extraction.py — Phase 1–6 end-to-end on one file.
+test_extraction.py — Phase 1–7 end-to-end on one file.
 
 Usage:
     python scripts/test_extraction.py
@@ -14,39 +14,50 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 import config
-from assessment import assess
-from extraction import (
-    CONFIDENCE_DISCLAIMER,
-    add_confidence_scores,
-    extract_clinical_data,
-    extraction_to_dict,
-    normalize_terminology,
-)
-from ingestion import ingest_document
-from knowledge import get_knowledge_retriever
+from extraction import CONFIDENCE_DISCLAIMER
+from generation import POC_DISCLAIMER
+from pipeline import analyze_document
+
+
+def print_summary_card(summary) -> None:
+    print("\n--- Patient summary card ---")
+    print(f"\nPatient summary:\n  {summary.patient_summary}")
+
+    if summary.key_findings:
+        print("\nKey findings:")
+        for item in summary.key_findings:
+            print(f"  - {item}")
+
+    if summary.risk_flags:
+        print("\nRisk flags:")
+        for item in summary.risk_flags:
+            print(f"  - {item}")
+
+    print(f"\nRecommended next step:\n  {summary.recommended_next_step}")
+
+    if summary.evidence_highlights:
+        print("\nEvidence highlights:")
+        for item in summary.evidence_highlights:
+            print(f"  - {item!r}")
+
+    if summary.knowledge_citations:
+        print("\nKnowledge citations:")
+        for item in summary.knowledge_citations:
+            print(f"  - {item}")
+
+    print(f"\nDisclaimer:\n  {summary.disclaimer}")
 
 
 def print_assessment_results(assessments) -> None:
-    print("\n--- Assessment / workflow flags ---")
+    print("\n--- Assessment flags (input to summary) ---")
     for item in assessments:
-        print(f"\n  Finding: {item.finding}")
-        print(f"  Severity: {item.severity}")
-        print(f"  Action: {item.recommended_action}")
-        print(f"  Knowledge source: {item.knowledge_source}")
-        print(f"  Evidence: {item.evidence!r}")
-
-
-def print_knowledge_context(knowledge_items) -> None:
-    print("\n--- Retrieved knowledge ---")
-    for item in knowledge_items:
-        value = ""
-        if item.observed_value:
-            unit = f" {item.observed_unit}" if item.observed_unit else ""
-            value = f" [{item.observed_value}{unit}]"
-        print(f"  {item.topic}{value}: {item.source}")
+        print(f"  [{item.severity}] {item.finding} -> {item.recommended_action}")
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     if len(sys.argv) > 1:
         file_path = Path(sys.argv[1])
     else:
@@ -56,41 +67,26 @@ def main() -> None:
         print(f"File not found: {file_path}")
         sys.exit(1)
 
-    print("=== Phase 2–6: Full pipeline through assessment ===\n")
+    print("=== Phase 1–7: Full pipeline through summary ===\n")
     print(f"File: {file_path.name}\n")
 
-    document = ingest_document(file_path)
-    print(f"Step 1: Ingested ({document.source_type})\n")
-
     try:
-        result = extract_clinical_data(document)
+        result = analyze_document(file_path)
     except Exception as exc:
-        print(f"Step 2 FAILED: {exc}")
+        print(f"Pipeline FAILED: {exc}")
         sys.exit(1)
-    print("Step 2: Extraction OK\n")
 
-    result = add_confidence_scores(result, document)
-    print("Step 3: Confidence OK\n")
+    print("Steps 1–7: OK (ingest -> extract -> confidence -> terminology")
+    print("           -> knowledge -> assessment -> summary)\n")
 
-    result = normalize_terminology(result)
-    print("Step 4: Terminology OK\n")
+    print_assessment_results(result.assessments)
+    print_summary_card(result.summary)
 
-    retriever = get_knowledge_retriever()
-    knowledge = retriever.retrieve_for_extraction(result)
-    print(f"Step 5: Knowledge OK ({len(knowledge)} items)\n")
-
-    assessments = assess(result, knowledge)
-    print(f"Step 6: Assessment OK ({len(assessments)} flag(s))\n")
-
-    print("--- Extraction JSON (abbreviated summary) ---")
-    summary = extraction_to_dict(result)
-    print(json.dumps(summary, indent=2))
-
-    print_knowledge_context(knowledge)
-    print_assessment_results(assessments)
+    print("\n--- Summary JSON ---")
+    print(json.dumps(json.loads(result.summary.model_dump_json()), indent=2))
 
     print(f"\n  Note: {CONFIDENCE_DISCLAIMER}")
-    print("  Assessment outputs are workflow suggestions for human review — not medical advice.")
+    print(f"  {POC_DISCLAIMER}")
 
 
 if __name__ == "__main__":
