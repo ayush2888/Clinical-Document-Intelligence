@@ -1,0 +1,72 @@
+{
+  "concepts": {
+    "type_2_diabetes_mellitus": {
+      "display_name": "Type 2 diabetes mellitus",
+      "aliases": [
+        "t2dm",
+        "type 2 diabetes",
+        "type 2 diabetes mellitus",
+        "type ii diabetes mellitus",
+        "dm2",
+        "diabetes mellitus type 2"
+      ]
+    },
+    "hypertension": {
+      "display_name": "Hypertension",
+      "aliases": ["htn", "high blood pressure", "hypertension", "elevated blood pressure"]
+    },
+    "copd": {
+      "display_name": "COPD",
+      "aliases": [
+        "copd",
+        "chronic obstructive pulmonary disease",
+        "acute exacerbation of copd"
+      ]
+    },
+    "hba1c": {
+      "display_name": "HbA1c",
+      "aliases": ["hba1c", "hb a1c", "a1c", "glycated hemoglobin", "hemoglobin a1c"]
+    },
+    "fasting_glucose": {
+      "display_name": "Fasting glucose",
+      "aliases": [
+        "fasting glucose",
+        "fasting blood glucose",
+        "fbg",
+        "glucose fasting"
+      ]
+    },
+    "creatinine": {
+      "display_name": "Creatinine",
+      "aliases": ["creatinine", "serum creatinine"]
+    },
+    "hemoglobin": {
+      "display_name": "Hemoglobin",
+      "aliases": ["hemoglobin", "hgb", "hb"]
+    },
+    "blood_pressure": {
+      "display_name": "Blood pressure",
+      "aliases": ["blood pressure", "bp", "systolic blood pressure"]
+    },
+    "heart_rate": {
+      "display_name": "Heart rate",
+      "aliases": ["heart rate", "pulse", "hr"]
+    },
+    "metformin": {
+      "display_name": "Metformin",
+      "aliases": ["metformin"]
+    },
+    "lisinopril": {
+      "display_name": "Lisinopril",
+      "aliases": ["lisinopril"]
+    },
+    "albuterol": {
+      "display_name": "Albuterol",
+      "aliases": ["albuterol"]
+    },
+    "tiotropium": {
+      "display_name": "Tiotropium",
+      "aliases": ["tiotropium"]
+    }
+  }
+}
