@@ -35,3 +35,11 @@ TESSERACT_CMD = os.getenv("TESSERACT_CMD", "")
 # --- Confidence (Phase 3) ---
 # Fields below this score may need human review (used in Phase 6+)
 CONFIDENCE_REVIEW_THRESHOLD = float(os.getenv("CONFIDENCE_REVIEW_THRESHOLD", "0.6"))
+
+# --- Assessment thresholds (Phase 6) — transparent rules in assessor.py ---
+HBA1C_REVIEW_THRESHOLD = float(os.getenv("HBA1C_REVIEW_THRESHOLD", "9.0"))
+GLUCOSE_REVIEW_THRESHOLD = float(os.getenv("GLUCOSE_REVIEW_THRESHOLD", "126"))
+BP_URGENT_SYSTOLIC = float(os.getenv("BP_URGENT_SYSTOLIC", "180"))
+BP_URGENT_DIASTOLIC = float(os.getenv("BP_URGENT_DIASTOLIC", "120"))
+BP_ELEVATED_SYSTOLIC = float(os.getenv("BP_ELEVATED_SYSTOLIC", "140"))
+BP_ELEVATED_DIASTOLIC = float(os.getenv("BP_ELEVATED_DIASTOLIC", "90"))
