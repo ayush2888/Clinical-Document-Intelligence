@@ -31,3 +31,7 @@ GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
 
 # --- Tesseract (Windows often needs the full path) ---
 TESSERACT_CMD = os.getenv("TESSERACT_CMD", "")
+
+# --- Confidence (Phase 3) ---
+# Fields below this score may need human review (used in Phase 6+)
+CONFIDENCE_REVIEW_THRESHOLD = float(os.getenv("CONFIDENCE_REVIEW_THRESHOLD", "0.6"))

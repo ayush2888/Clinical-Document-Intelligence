@@ -1,6 +1,18 @@
-# Extraction: LLM + Pydantic schemas (Phase 2)
+# Extraction: LLM + Pydantic schemas (Phase 2+)
 
+from extraction.confidence import (
+    CONFIDENCE_DISCLAIMER,
+    add_confidence_scores,
+    score_field,
+)
 from extraction.llm_extractor import extract_clinical_data, extraction_to_dict
 from extraction.schemas import ClinicalExtraction
 
-__all__ = ["ClinicalExtraction", "extract_clinical_data", "extraction_to_dict"]
+__all__ = [
+    "ClinicalExtraction",
+    "CONFIDENCE_DISCLAIMER",
+    "add_confidence_scores",
+    "extract_clinical_data",
+    "extraction_to_dict",
+    "score_field",
+]
