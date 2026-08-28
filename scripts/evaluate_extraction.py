@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from dataclasses import asdict
 from pathlib import Path
 
@@ -28,6 +29,25 @@ from pipeline import extract_from_document
 
 
 DEFAULT_GROUND_TRUTH = config.EVAL_DIR / "ground_truth.json"
+MAX_EXTRACTION_ATTEMPTS = 3
+
+
+def extract_with_retry(document):
+    """Retry live extraction when Groq returns intermittent JSON validation errors."""
+    last_error: Exception | None = None
+    for attempt in range(1, MAX_EXTRACTION_ATTEMPTS + 1):
+        try:
+            return extract_from_document(document)
+        except Exception as exc:
+            last_error = exc
+            message = str(exc).lower()
+            retryable = "json_validate_failed" in message or "failed to validate json" in message
+            if not retryable or attempt == MAX_EXTRACTION_ATTEMPTS:
+                raise
+            print(f"  Retry {attempt}/{MAX_EXTRACTION_ATTEMPTS - 1} after JSON validation error...")
+            time.sleep(2 * attempt)
+    raise last_error  # pragma: no cover
+
 
 
 def load_ground_truth(path: Path) -> GroundTruthFile:
@@ -110,7 +130,7 @@ def run_evaluation(
             print(f"  Notes: {case.notes}")
 
         document = ingest_document(doc_path)
-        extraction = extract_from_document(document)
+        extraction = extract_with_retry(document)
         case_report = evaluate_case(case, extraction)
         reports.append(case_report)
 

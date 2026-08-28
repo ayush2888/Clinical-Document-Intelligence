@@ -58,7 +58,7 @@ def create_eval_excerpts() -> None:
     that still contain every field listed in ground_truth.json.
     """
     a_full = (EXTERNAL_DIR / "golden_a_dde.txt").read_text(encoding="utf-8")
-    a_excerpt = a_full[:4200].rstrip()
+    a_excerpt = a_full[:3200].rstrip()
     a_excerpt += "\n\n[... truncated for POC evaluation — see golden_a_dde.txt ...]\n"
     (EXTERNAL_DIR / "golden_a_eval.txt").write_text(a_excerpt, encoding="utf-8")
     print(f"  -> golden_a_eval.txt ({len(a_excerpt)} chars)")

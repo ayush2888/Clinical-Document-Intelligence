@@ -1,0 +1,205 @@
+{
+  "documents_evaluated": 3,
+  "fields_evaluated": 28,
+  "correct": 28,
+  "incorrect": 0,
+  "missing": 0,
+  "details": [
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "patient.name",
+      "status": "correct",
+      "expected": "Jane Doe",
+      "actual": "Jane Doe"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "patient.age",
+      "status": "correct",
+      "expected": "58",
+      "actual": "58"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "patient.sex",
+      "status": "correct",
+      "expected": "Female",
+      "actual": "Female"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "diagnoses.type_2_diabetes_mellitus",
+      "status": "correct",
+      "expected": "type_2_diabetes_mellitus",
+      "actual": "Type 2 diabetes mellitus"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "diagnoses.hypertension",
+      "status": "correct",
+      "expected": "hypertension",
+      "actual": "Hypertension"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "medications.metformin",
+      "status": "correct",
+      "expected": "metformin | dose~500",
+      "actual": "Metformin | dose=500 mg"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "medications.lisinopril",
+      "status": "correct",
+      "expected": "lisinopril | dose~10",
+      "actual": "Lisinopril | dose=10 mg"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "laboratory_results.hba1c",
+      "status": "correct",
+      "expected": "hba1c | value=9.2",
+      "actual": "HbA1c | value=9.2"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "laboratory_results.fasting_glucose",
+      "status": "correct",
+      "expected": "fasting_glucose | value=186",
+      "actual": "Fasting glucose | value=186"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "laboratory_results.creatinine",
+      "status": "correct",
+      "expected": "creatinine | value=1.1",
+      "actual": "Creatinine | value=1.1"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "vital_signs.blood_pressure",
+      "status": "correct",
+      "expected": "blood_pressure | value~148/92",
+      "actual": "Blood pressure | value=148/92"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "vital_signs.heart_rate",
+      "status": "correct",
+      "expected": "heart_rate | value=78",
+      "actual": "Heart rate | value=78"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "symptoms.thirst",
+      "status": "correct",
+      "expected": "name~thirst",
+      "actual": "Increased thirst"
+    },
+    {
+      "case_id": "eval_physician_note_jane_doe",
+      "field_path": "symptoms.fatigue",
+      "status": "correct",
+      "expected": "name~fatigue",
+      "actual": "Fatigue"
+    },
+    {
+      "case_id": "superinsight_golden_a_dde",
+      "field_path": "patient.name",
+      "status": "correct",
+      "expected": "Harrison",
+      "actual": "Harrison, John P."
+    },
+    {
+      "case_id": "superinsight_golden_a_dde",
+      "field_path": "patient.age",
+      "status": "correct",
+      "expected": "58",
+      "actual": "58"
+    },
+    {
+      "case_id": "superinsight_golden_a_dde",
+      "field_path": "patient.sex",
+      "status": "correct",
+      "expected": "Male",
+      "actual": "Male"
+    },
+    {
+      "case_id": "superinsight_golden_a_dde",
+      "field_path": "diagnoses.hypertension",
+      "status": "correct",
+      "expected": "hypertension",
+      "actual": "Hypertension"
+    },
+    {
+      "case_id": "superinsight_golden_a_dde",
+      "field_path": "diagnoses.disc herniation",
+      "status": "correct",
+      "expected": "name~disc herniation",
+      "actual": "Right-sided paracentral disc herniation at C4-C5"
+    },
+    {
+      "case_id": "superinsight_golden_a_dde",
+      "field_path": "vital_signs.blood_pressure",
+      "status": "correct",
+      "expected": "blood_pressure | value~126/86",
+      "actual": "Blood pressure | value=126/86"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "patient.name",
+      "status": "correct",
+      "expected": "Valdez",
+      "actual": "Adriana Valdez"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "patient.age",
+      "status": "correct",
+      "expected": "39",
+      "actual": "39"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "patient.sex",
+      "status": "correct",
+      "expected": "Female",
+      "actual": "Female"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "diagnoses.bipolar_disorder",
+      "status": "correct",
+      "expected": "bipolar_disorder",
+      "actual": "Bipolar Disorder (F31.9) - Active"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "diagnoses.generalized_anxiety_disorder",
+      "status": "correct",
+      "expected": "generalized_anxiety_disorder",
+      "actual": "Generalized Anxiety Disorder (F41.1) - Active"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "diagnoses.sleep",
+      "status": "correct",
+      "expected": "name~sleep",
+      "actual": "Sleep Disturbance (G47.00) - Active"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "medications.trazodone",
+      "status": "correct",
+      "expected": "trazodone",
+      "actual": "Trazodone"
+    },
+    {
+      "case_id": "superinsight_golden_b_clinical_note",
+      "field_path": "medications.sertraline",
+      "status": "correct",
+      "expected": "sertraline",
+      "actual": "Zoloft (sertraline)"
+    }
+  ]
+}

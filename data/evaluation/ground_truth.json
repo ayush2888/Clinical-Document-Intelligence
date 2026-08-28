@@ -46,8 +46,8 @@
           "sex": { "match": "contains", "value": "Male" }
         },
         "diagnoses": [
-          { "name_contains": "avascular" },
-          { "name_contains": "hypertension" }
+          { "canonical_name": "hypertension" },
+          { "name_contains": "disc herniation" }
         ],
         "vital_signs": [
           { "canonical_name": "blood_pressure", "value_contains": "126/86" }
