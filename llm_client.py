@@ -17,13 +17,15 @@ import config
 
 def get_llm_client() -> OpenAI:
     """Return a client configured for Groq."""
-    if not config.GROQ_API_KEY:
+    api_key = config.get_groq_api_key()
+    if not api_key:
         raise ValueError(
-            "GROQ_API_KEY is missing. Add it to your .env file "
-            "(see .env.example)."
+            "GROQ_API_KEY is missing. Local: add to .env. "
+            "Streamlit Cloud: Settings → Secrets (TOML format). "
+            "See .env.example and docs/STREAMLIT_DEPLOY.md."
         )
 
     return OpenAI(
-        api_key=config.GROQ_API_KEY,
-        base_url=config.GROQ_BASE_URL,
+        api_key=api_key,
+        base_url=config.get_groq_base_url(),
     )

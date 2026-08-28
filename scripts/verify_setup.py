@@ -31,9 +31,9 @@ def check_config() -> None:
     print("\nChecking config.py...")
     print(f"  Project root : {config.BASE_DIR}")
     print(f"  Demo folder  : {config.DEMO_DIR}")
-    print(f"  Groq model   : {config.GROQ_MODEL}")
-    print(f"  Groq base URL: {config.GROQ_BASE_URL}")
-    if config.GROQ_API_KEY:
+    print(f"  Groq model   : {config.get_groq_model()}")
+    print(f"  Groq base URL: {config.get_groq_base_url()}")
+    if config.get_groq_api_key():
         print("  Groq API key : set (hidden)")
     else:
         print("  Groq API key : not set yet (fine for Phase 0)")

@@ -20,7 +20,10 @@ load_dotenv(BASE_DIR / ".env")
 
 
 def _setting(name: str, default: str = "") -> str:
-    """Read from Streamlit secrets (cloud) or environment (.env local)."""
+    """Read from environment or Streamlit secrets (evaluated at call time)."""
+    env_val = os.getenv(name)
+    if env_val:
+        return env_val
     try:
         import streamlit as st
 
@@ -28,7 +31,19 @@ def _setting(name: str, default: str = "") -> str:
             return str(st.secrets[name])
     except Exception:
         pass
-    return os.getenv(name, default)
+    return default
+
+
+def get_groq_api_key() -> str:
+    return _setting("GROQ_API_KEY", "")
+
+
+def get_groq_base_url() -> str:
+    return _setting("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
+
+
+def get_groq_model() -> str:
+    return _setting("GROQ_MODEL", "openai/gpt-oss-20b")
 
 
 # --- Paths (easy to reuse in other files) ---
@@ -37,12 +52,8 @@ PATIENT_DEMO_DIR = DEMO_DIR / "patient_001"
 EVAL_DIR = BASE_DIR / "data" / "evaluation"
 SUPERINSIGHT_DIR = EVAL_DIR / "external"
 
-# --- Groq LLM (used starting Phase 2; safe to leave empty in Phase 0) ---
-# Groq uses an OpenAI-compatible API, so Phase 2 will use the `openai` Python
-# package with GROQ_BASE_URL — no OpenAI account needed.
-GROQ_API_KEY = _setting("GROQ_API_KEY", "")
-GROQ_BASE_URL = _setting("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
-GROQ_MODEL = _setting("GROQ_MODEL", "openai/gpt-oss-20b")
+# --- Groq LLM (used starting Phase 2) ---
+# Use get_groq_*() at runtime so Streamlit Cloud secrets load correctly.
 
 # --- Tesseract (Windows often needs the full path) ---
 TESSERACT_CMD = _setting("TESSERACT_CMD", "")

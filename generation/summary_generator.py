@@ -87,7 +87,7 @@ def generate_summary(
 
     try:
         response = client.chat.completions.create(
-            model=config.GROQ_MODEL,
+            model=config.get_groq_model(),
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message},
