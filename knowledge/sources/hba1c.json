@@ -1,0 +1,8 @@
+{
+  "topic": "HbA1c",
+  "canonical_name": "hba1c",
+  "source": "American Diabetes Association (public education summary)",
+  "version": "POC-2024",
+  "interpretation": "HbA1c estimates average blood glucose over roughly 3 months. In many adults with diabetes, values at or above 9% suggest very poor glycemic control and often warrant prompt clinical review and treatment adjustment. This POC uses general reference context only — not patient-specific medical advice.",
+  "url": "https://diabetes.org/about-diabetes/a1c"
+}

@@ -1,0 +1,8 @@
+{
+  "topic": "Hemoglobin",
+  "canonical_name": "hemoglobin",
+  "source": "World Health Organization (public anemia summary)",
+  "version": "POC-2024",
+  "interpretation": "Hemoglobin concentration is used to screen for anemia. Low values relative to sex-specific reference ranges may indicate anemia and warrant evaluation of cause (iron deficiency, chronic disease, etc.). Values should be interpreted with full blood count and clinical context. POC reference only.",
+  "url": "https://www.who.int/data/gho/data/themes/topics/anaemia_in_women_and_children"
+}

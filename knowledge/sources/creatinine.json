@@ -1,0 +1,8 @@
+{
+  "topic": "Creatinine",
+  "canonical_name": "creatinine",
+  "source": "National Kidney Foundation (public education summary)",
+  "version": "POC-2024",
+  "interpretation": "Serum creatinine helps assess kidney function; interpretation depends on age, sex, muscle mass, and reference laboratory ranges. Values above the stated reference interval may suggest reduced kidney function and often merit clinical correlation and repeat testing. This POC does not compute eGFR or stage CKD.",
+  "url": "https://www.kidney.org/kidney-topics/chronic-kidney-disease-ckd"
+}

@@ -1,0 +1,8 @@
+{
+  "topic": "Fasting glucose",
+  "canonical_name": "fasting_glucose",
+  "source": "Centers for Disease Control and Prevention (public summary)",
+  "version": "POC-2024",
+  "interpretation": "Fasting blood glucose above 125 mg/dL is often used as a diabetes diagnostic threshold in many references; values in the 100–125 mg/dL range may indicate prediabetes. Elevated fasting glucose with other findings may support review of glycemic control. POC reference only — clinician must interpret in full clinical context.",
+  "url": "https://www.cdc.gov/diabetes/about/index.html"
+}

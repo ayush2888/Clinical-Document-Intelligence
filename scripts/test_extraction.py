@@ -1,11 +1,9 @@
 """
-test_extraction.py — Phase 1–4 end-to-end on one file.
+test_extraction.py — Phase 1–5 end-to-end on one file.
 
 Usage:
     python scripts/test_extraction.py
     python scripts/test_extraction.py data/demo/physician_note.txt
-    python scripts/test_extraction.py data/demo/discharge_summary.pdf
-    python scripts/test_extraction.py data/demo/lab_report.png
 """
 
 import json
@@ -24,33 +22,44 @@ from extraction import (
     normalize_terminology,
 )
 from ingestion import ingest_document
+from knowledge import get_knowledge_retriever
 
 
 def print_lab_with_confidence(result) -> None:
-    """Print lab results with confidence and canonical names."""
     if not result.laboratory_results:
         return
 
-    print("\n--- Lab results (with confidence + canonical name) ---")
+    print("\n--- Lab results (confidence + canonical) ---")
     for lab in result.laboratory_results:
         unit = f" {lab.unit}" if lab.unit else ""
-        print(f"\n  Raw test name: {lab.test_name}")
-        print(f"  Canonical: {lab.canonical_name or '(no match)'}")
-        print(f"  Value: {lab.value}{unit}")
-        print(f"  Confidence: {lab.confidence}")
-        print(f"  Evidence: {lab.evidence!r}")
+        print(f"\n  {lab.test_name} -> {lab.canonical_name or '(no match)'}")
+        print(f"  Value: {lab.value}{unit} | Confidence: {lab.confidence}")
 
 
 def print_terminology_summary(result) -> None:
-    """Show raw → canonical mappings for key fields."""
     print("\n--- Terminology normalization ---")
     for dx in result.diagnoses:
-        canonical = dx.canonical_name or "(no match)"
-        print(f"  Diagnosis: {dx.name!r} -> {canonical}")
-
+        print(f"  Diagnosis: {dx.name!r} -> {dx.canonical_name or '(no match)'}")
     for lab in result.laboratory_results:
-        canonical = lab.canonical_name or "(no match)"
-        print(f"  Lab: {lab.test_name!r} -> {canonical}")
+        print(f"  Lab: {lab.test_name!r} -> {lab.canonical_name or '(no match)'}")
+
+
+def print_knowledge_context(knowledge_items) -> None:
+    print("\n--- Retrieved knowledge ---")
+    if not knowledge_items:
+        print("  (no canonical labs/vitals to look up)")
+        return
+
+    for item in knowledge_items:
+        value = ""
+        if item.observed_value:
+            unit = f" {item.observed_unit}" if item.observed_unit else ""
+            value = f" [observed: {item.observed_value}{unit}]"
+        print(f"\n  Topic: {item.topic}{value}")
+        print(f"  Source: {item.source} ({item.version})")
+        print(f"  Context: {item.interpretation}")
+        if item.url:
+            print(f"  URL: {item.url}")
 
 
 def main() -> None:
@@ -63,13 +72,12 @@ def main() -> None:
         print(f"File not found: {file_path}")
         sys.exit(1)
 
-    print("=== Phase 2–4: Extract + confidence + terminology ===\n")
+    print("=== Phase 2–5: Extract through knowledge retrieval ===\n")
     print(f"File: {file_path.name}\n")
 
     print("Step 1: Ingesting document...")
     document = ingest_document(file_path)
-    print(f"  Source type: {document.source_type}")
-    print(f"  Text length: {len(document.text)} characters\n")
+    print(f"  OK ({document.source_type}, {len(document.text)} chars)\n")
 
     print("Step 2: Groq structured extraction...")
     try:
@@ -79,38 +87,28 @@ def main() -> None:
         sys.exit(1)
     print("  OK\n")
 
-    print("Step 3: Confidence scores (Python)...")
+    print("Step 3: Confidence scores...")
     result = add_confidence_scores(result, document)
     print("  OK\n")
 
-    print("Step 4: Terminology normalization (Python)...")
+    print("Step 4: Terminology normalization...")
     result = normalize_terminology(result)
     print("  OK\n")
 
-    print("--- Structured output (JSON) ---")
+    print("Step 5: Knowledge retrieval...")
+    retriever = get_knowledge_retriever()
+    knowledge = retriever.retrieve_for_extraction(result)
+    print(f"  OK ({len(knowledge)} knowledge item(s))\n")
+
+    print("--- Structured extraction (JSON) ---")
     print(json.dumps(extraction_to_dict(result), indent=2))
 
     print_terminology_summary(result)
     print_lab_with_confidence(result)
-
-    print("\n--- Quick summary ---")
-    if result.patient:
-        p = result.patient
-        print(f"  Patient: {p.name or '—'} | Age: {p.age or '—'} | Sex: {p.sex or '—'}")
-    print(f"  Diagnoses: {len(result.diagnoses)}")
-    print(f"  Medications: {len(result.medications)}")
-    print(f"  Lab results: {len(result.laboratory_results)}")
-
-    low = [
-        lab.test_name
-        for lab in result.laboratory_results
-        if lab.confidence is not None
-        and lab.confidence < config.CONFIDENCE_REVIEW_THRESHOLD
-    ]
-    if low:
-        print(f"\n  Low-confidence labs (review suggested): {', '.join(low)}")
+    print_knowledge_context(knowledge)
 
     print(f"\n  Note: {CONFIDENCE_DISCLAIMER}")
+    print("  Knowledge passages are POC decision-support references only.")
 
 
 if __name__ == "__main__":

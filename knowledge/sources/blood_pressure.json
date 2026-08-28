@@ -1,0 +1,8 @@
+{
+  "topic": "Blood pressure",
+  "canonical_name": "blood_pressure",
+  "source": "American Heart Association (public education summary)",
+  "version": "POC-2024",
+  "interpretation": "Blood pressure readings of 140/90 mmHg or higher are often considered elevated in many clinical guidelines. Readings at or above 180/120 mmHg may indicate a hypertensive urgency/emergency and require urgent evaluation. Context (symptoms, chronicity, comorbidities) matters — this POC provides workflow-oriented reference text only.",
+  "url": "https://www.heart.org/en/health-topics/high-blood-pressure"
+}
